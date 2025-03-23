@@ -27,6 +27,10 @@ func ConnectToPostgresDB(cfg DBConfig) DB {
 		log.Fatal("could not establish database connection, error: %w", err)
 	}
 
+	if err = pool.Ping(context.Background()); err != nil {
+		log.Fatal("could not ping database, error: %w", err)
+	}
+
 	return DB{
 		Pool: pool,
 	}
