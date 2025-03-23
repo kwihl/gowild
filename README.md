@@ -30,10 +30,10 @@ Besides go, there following exists:
 # Understanding the go folder structure
 
 ## Names of subdirectories
-`/cmd` - This is where the main function(s) live. Typically just one, but might be more if you have scripts besides the server.
-`/internal` - This is where the main meat of the application lives. The "classes", or well, structs + interfaces responsible for doing business logic and making calls to the database live here.
-`/pkg` - Often called "lib" in other languages. This is where you put isolated bundles of functions which you treat like your own libraries, which you could in theory swap out. Good example for this is to have **database connections for a specific database type** in pkg, but then have your **database interfacing code** in internal in some type of db/repository package.
-`/migrations` - Here we put SQL files for whenever we want to change the database schema. The nice thing about this is you can step forward and ba
+- `/cmd` - This is where the main function(s) live. Typically just one, but might be more if you have scripts besides the server.
+- `/internal` - This is where the main meat of the application lives. The "classes", or well, structs + interfaces responsible for doing business logic and making calls to the database live here.
+- `/pkg` - Often called "lib" in other languages. This is where you put isolated bundles of functions which you treat like your own libraries, which you could in theory swap out. Good example for this is to have **database connections for a specific database type** in pkg, but then have your **database interfacing code** in internal in some type of db/repository package.
+- `/migrations` - Here we put SQL files for whenever we want to change the database schema. The nice thing about this is you can step forward and ba
 
 # Understanding the application in action
 
