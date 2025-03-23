@@ -32,7 +32,7 @@ func (h *ForestHandler) Animals(w http.ResponseWriter, req *http.Request) {
 	case http.MethodGet:
 		_, err := h.service.ListForestAnimals(ctx)
 		if err != nil {
-			slog.ErrorContext(ctx, "error when listing forest animals")
+			slog.ErrorContext(ctx, "error when listing forest animals", "error", err)
 			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
