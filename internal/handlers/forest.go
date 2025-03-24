@@ -21,12 +21,7 @@ var _ internal.ForestHandler = (*ForestHandler)(nil)
 
 func (h *ForestHandler) Animals(w http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
-	defer func() {
-		if r := recover(); r != nil {
-			slog.ErrorContext(ctx, "recovered from panic in handler")
-			http.Error(w, "internal server error", http.StatusInternalServerError)
-		}
-	}()
+	defer recoveryFunc(ctx, w)
 
 	switch req.Method {
 	case http.MethodGet:
@@ -36,7 +31,6 @@ func (h *ForestHandler) Animals(w http.ResponseWriter, req *http.Request) {
 			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
-
 		// Serve the resource.
 	case http.MethodPost:
 		// Create a new record.
@@ -52,12 +46,7 @@ func (h *ForestHandler) Animals(w http.ResponseWriter, req *http.Request) {
 
 func (h *ForestHandler) Plants(w http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
-	defer func() {
-		if r := recover(); r != nil {
-			slog.ErrorContext(ctx, "recovered from panic in handler")
-			http.Error(w, "internal server error", http.StatusInternalServerError)
-		}
-	}()
+	defer recoveryFunc(ctx, w)
 
 	switch req.Method {
 	case http.MethodGet:
