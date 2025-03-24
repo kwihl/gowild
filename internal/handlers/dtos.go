@@ -4,18 +4,17 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	fauna "gowild.com/pkg/animals"
-	flora "gowild.com/pkg/plants"
+	"gowild.com/internal/domain"
 )
 
 type animalDTO struct {
 	ID    uuid.UUID `json:"id"`
-	Name  string    `json:"name"`
-	Noise string    `json:"noise"`
+	Name  string    `json:"name,omitempty"`
+	Noise string    `json:"noise,omitempty"`
 }
 
-func (a *animalDTO) toDomain() (fauna.Animal, error) {
-	return fauna.Animal{
+func (a *animalDTO) toDomain() (domain.Animal, error) {
+	return domain.Animal{
 		ID:    a.ID,
 		Name:  a.Name,
 		Noise: a.Noise,
@@ -24,18 +23,18 @@ func (a *animalDTO) toDomain() (fauna.Animal, error) {
 
 type plantDTO struct {
 	ID   uuid.UUID `json:"id"`
-	Name string    `json:"name"`
-	Size string    `json:"plantSize"`
+	Name string    `json:"name,omitempty"`
+	Size string    `json:"plantSize,omitempty"`
 }
 
-func (a *plantDTO) toDomain() (flora.Plant, error) {
+func (a *plantDTO) toDomain() (domain.Plant, error) {
 
-	plantSize, ok := flora.ToPlantSize(a.Size)
+	plantSize, ok := domain.ToPlantSize(a.Size)
 	if !ok {
-		return flora.Plant{}, fmt.Errorf("invalid plant size")
+		return domain.Plant{}, fmt.Errorf("invalid plant size")
 	}
 
-	return flora.Plant{
+	return domain.Plant{
 		ID:   a.ID,
 		Name: a.Name,
 		Size: plantSize,

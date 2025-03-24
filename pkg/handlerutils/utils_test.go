@@ -1,8 +1,6 @@
 package handlerutils
 
 import (
-	"bytes"
-	"io"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -25,7 +23,7 @@ func TestUnmarshalSingle(t *testing.T) {
 		Foo: "something",
 	}
 
-	res, err := unmarshal[testDTO](body)
+	res, err := Unmarshal[testDTO](body)
 	require.NoError(t, err)
 
 	assert.Equal(t, expected.ID, res.ID)
@@ -67,7 +65,7 @@ func TestUnmarshalList(t *testing.T) {
 		},
 	}
 
-	res, err := unmarshal[[]testDTO](body)
+	res, err := Unmarshal[[]testDTO](body)
 	require.NoError(t, err)
 
 	assert.Len(t, *res, len(expected))
@@ -96,7 +94,7 @@ func TestUnmarshalShouldFail(t *testing.T) {
 	}
 	]`)
 
-	_, err := unmarshal[testDTO](body) // <-- Parametrized as single object but it contains a list
+	_, err := Unmarshal[testDTO](body) // <-- Parametrized as single object but it contains a list
 	assert.Error(t, err)
 
 	body = []byte(`{
@@ -104,7 +102,7 @@ func TestUnmarshalShouldFail(t *testing.T) {
 		"foo":"something" 
 	}`)
 
-	_, err = unmarshal[[]testDTO](body) // <-- Parametrized as list but it contains a single object
+	_, err = Unmarshal[[]testDTO](body) // <-- Parametrized as list but it contains a single object
 	assert.Error(t, err)
 }
 
@@ -114,7 +112,7 @@ func TestAttemptUnmarshal(t *testing.T) {
 		Foo string `json:"foo"`
 	}
 
-	bodyMultiple := io.NopCloser(bytes.NewReader([]byte(`[{
+	bodyMultiple := []byte(`[{
 		"id":"123",
 		"foo":"something"
 	},
@@ -126,7 +124,7 @@ func TestAttemptUnmarshal(t *testing.T) {
 		"id":"789",
 		"foo":"something entirely different"
 	}
-	]`)))
+	]`)
 
 	singular, dto, dtos, err := AttemptUnmarshal[testDTO](bodyMultiple)
 

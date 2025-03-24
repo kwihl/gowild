@@ -6,8 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"gowild.com/internal"
-	"gowild.com/pkg/animals"
-	"gowild.com/pkg/plants"
+	"gowild.com/internal/domain"
 )
 
 type ForestService struct {
@@ -24,18 +23,18 @@ func NewForestService(animalRepository internal.AnimalRepository, plantRepositor
 
 var _ internal.ForestService = (*ForestService)(nil)
 
-func (s *ForestService) ListForestAnimals(ctx context.Context) ([]animals.Animal, error) {
+func (s *ForestService) ListForestAnimals(ctx context.Context) ([]domain.Animal, error) {
 	return nil, fmt.Errorf("unimplemented method")
 }
 
-func (s *ForestService) GetForestAnimal(ctx context.Context, id uuid.UUID) (animals.Animal, error) {
-	return animals.Animal{}, fmt.Errorf("unimplemented method")
+func (s *ForestService) GetForestAnimal(ctx context.Context, id uuid.UUID) (domain.Animal, error) {
+	return domain.Animal{}, fmt.Errorf("unimplemented method")
 }
 
-func (s *ForestService) ListForestPlants(ctx context.Context) ([]plants.Plant, error) {
+func (s *ForestService) ListForestPlants(ctx context.Context) ([]domain.Plant, error) {
 	return nil, fmt.Errorf("unimplemented method")
 }
 
-func (s *ForestService) GetForestPlant(ctx context.Context, id uuid.UUID) (plants.Plant, error) {
-	return plants.Plant{}, fmt.Errorf("unimplemented method")
+func (s *ForestService) GetForestPlant(ctx context.Context, id uuid.UUID) (domain.Plant, error) {
+	return domain.Plant{}, fmt.Errorf("unimplemented method")
 }

@@ -1,4 +1,4 @@
-package animals
+package domain
 
 import "github.com/google/uuid"
 
