@@ -27,6 +27,14 @@ type animalDTO struct {
 	Noise string    `json:"noise"`
 }
 
+func (a *animalDTO) toDomain() (fauna.Animal, error) {
+	return fauna.Animal{
+		ID:    a.ID,
+		Name:  a.Name,
+		Noise: a.Noise,
+	}, nil
+}
+
 type plantDTO struct {
 	ID   uuid.UUID `json:"id"`
 	Name string    `json:"name"`
@@ -44,13 +52,5 @@ func (a *plantDTO) toDomain() (flora.Plant, error) {
 		ID:   a.ID,
 		Name: a.Name,
 		Size: plantSize,
-	}, nil
-}
-
-func (a *animalDTO) toDomain() (fauna.Animal, error) {
-	return fauna.Animal{
-		ID:    a.ID,
-		Name:  a.Name,
-		Noise: a.Noise,
 	}, nil
 }
