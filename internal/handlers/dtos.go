@@ -1,25 +1,12 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 
 	"github.com/google/uuid"
 	fauna "gowild.com/pkg/animals"
 	flora "gowild.com/pkg/plants"
 )
-
-func toDTO[T any](body io.ReadCloser) (*T, error) {
-	decoder := json.NewDecoder(body)
-	var dto T
-	if err := decoder.Decode(&dto); err != nil {
-		return nil, err
-	}
-
-	fmt.Println(dto)
-	return &dto, nil
-}
 
 type animalDTO struct {
 	ID    uuid.UUID `json:"id"`
