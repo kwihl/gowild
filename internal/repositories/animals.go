@@ -28,14 +28,14 @@ func (r *animalRepository) CreateAnimal(ctx context.Context, animals []domain.An
 }
 
 func (r *animalRepository) ReadAllAnimals(ctx context.Context) ([]domain.Animal, error) {
-
 	rows, err := r.dbpool.Query(ctx, `
-		SELECT(
+		SELECT
 			id,
 			name,
 			noise
-		)
-		FROM animal;
+		FROM animal
+		WHERE
+			biome = 'forest';
 	`)
 
 	if err != nil {
