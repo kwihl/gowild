@@ -10,7 +10,7 @@ import (
 type animalDTO struct {
 	ID    uuid.UUID `json:"id"`
 	Name  string    `json:"name,omitempty"`
-	Noise string    `json:"noise,omitempty"`
+	Noise *string   `json:"noise,omitempty"`
 }
 
 func (a animalDTO) toDomain() domain.Animal {

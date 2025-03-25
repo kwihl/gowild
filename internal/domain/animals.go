@@ -7,5 +7,5 @@ import (
 type Animal struct {
 	ID    uuid.UUID
 	Name  string
-	Noise string
+	Noise *string
 }
