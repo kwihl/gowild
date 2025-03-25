@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"io"
 	"log/slog"
 	"net/http"
@@ -22,6 +23,8 @@ var _ internal.ForestHandler = (*ForestHandler)(nil)
 
 func (h *ForestHandler) Animals(w http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
+	slog.InfoContext(ctx, "/v1/animals received request")
+
 	defer recoveryFunc(ctx, w)
 
 	// Read data and check if there's payload
@@ -41,14 +44,22 @@ func (h *ForestHandler) Animals(w http.ResponseWriter, req *http.Request) {
 	case http.MethodGet:
 		// Check if it's a a get by ID or a get all
 		if bodyIsEmpty {
-			/*animals, err := h.service.ListForestAnimals(ctx)
+			animals, err := h.service.ListForestAnimals(ctx)
 			if err != nil {
 				slog.ErrorContext(ctx, "error when listing forest animals", "error", err)
 				http.Error(w, "internal server error", http.StatusInternalServerError)
 				return
 			}
-			dtos :=
-			w.Write()*/
+			resDTOs := animalsFromDomain(animals)
+			res, err := json.Marshal(resDTOs)
+			if err != nil {
+				slog.ErrorContext(ctx, "error marshalling response", "error", err)
+				http.Error(w, "internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			w.Write(res)
+			return
 		}
 		// Serve the resource.
 	case http.MethodPost:

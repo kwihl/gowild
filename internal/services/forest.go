@@ -24,7 +24,11 @@ func NewForestService(animalRepository internal.AnimalRepository, plantRepositor
 var _ internal.ForestService = (*ForestService)(nil)
 
 func (s *ForestService) ListForestAnimals(ctx context.Context) ([]domain.Animal, error) {
-	return nil, fmt.Errorf("unimplemented method")
+	return []domain.Animal{{
+		ID:    uuid.Nil,
+		Name:  "Iguana",
+		Noise: "whatever noise iguanas make",
+	}}, nil
 }
 
 func (s *ForestService) GetForestAnimal(ctx context.Context, id uuid.UUID) (domain.Animal, error) {
