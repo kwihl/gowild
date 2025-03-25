@@ -8,9 +8,9 @@ import (
 )
 
 type animalDAO struct {
-	ID    uuid.UUID `db:"id"`
-	Name  string    `db:"name"`
-	Noise string    `db:"noise"`
+	ID    uuid.UUID
+	Name  string
+	Noise *string
 }
 
 func (a animalDAO) toDomain() domain.Animal {
@@ -22,9 +22,9 @@ func (a animalDAO) toDomain() domain.Animal {
 }
 
 type plantDAO struct {
-	ID   uuid.UUID `db:"id"`
-	Name string    `db:"name"`
-	Size string    `db:"plantSize"`
+	ID   uuid.UUID
+	Name string
+	Size string
 }
 
 func (p plantDAO) toDomain() (domain.Plant, error) {
