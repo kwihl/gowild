@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"gowild.com/internal"
 	"gowild.com/internal/domain"
@@ -27,7 +28,31 @@ func (r *animalRepository) CreateAnimal(ctx context.Context, animals []domain.An
 }
 
 func (r *animalRepository) ReadAllAnimals(ctx context.Context) ([]domain.Animal, error) {
-	return nil, fmt.Errorf("unimplemented method")
+
+	rows, err := r.dbpool.Query(ctx, `
+		SELECT(
+			id,
+			name,
+			noise
+		)
+		FROM animal;
+	`)
+
+	if err != nil {
+		return nil, err
+	}
+
+	daos, err := pgx.CollectRows(rows, pgx.RowToStructByName[animalDAO])
+	if err != nil {
+		return nil, err
+	}
+
+	animals := make([]domain.Animal, len(daos))
+	for i, dao := range daos {
+		animals[i] = dao.toDomain()
+	}
+
+	return animals, nil
 }
 
 func (r *animalRepository) ReadAnimal(ctx context.Context, id uuid.UUID) (domain.Animal, error) {
