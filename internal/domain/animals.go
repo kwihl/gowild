@@ -1,6 +1,8 @@
-package animals
+package domain
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+)
 
 type Animal struct {
 	ID    uuid.UUID

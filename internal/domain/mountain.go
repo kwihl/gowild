@@ -1,4 +1,4 @@
-package biomes
+package domain
 
 type MountainPeak struct {
 	AltitudeInMeters int

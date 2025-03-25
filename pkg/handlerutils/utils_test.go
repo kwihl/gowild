@@ -1,44 +1,42 @@
-package handlers
+package handlerutils
 
 import (
-	"bytes"
-	"io"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-func TestToDTOSingle(t *testing.T) {
-	type dto struct {
+func TestUnmarshalSingle(t *testing.T) {
+	type testDTO struct {
 		ID  string `json:"id"`
 		Foo string `json:"foo"`
 	}
 
-	body := io.NopCloser(bytes.NewReader([]byte(`{
+	body := []byte(`{
 		"id":"123",
 		"foo":"something" 
-	}`)))
+	}`)
 
-	var expected = dto{
+	var expected = testDTO{
 		ID:  "123",
 		Foo: "something",
 	}
 
-	res, err := toDTO[dto](body)
+	res, err := Unmarshal[testDTO](body)
 	require.NoError(t, err)
 
 	assert.Equal(t, expected.ID, res.ID)
 	assert.Equal(t, expected.Foo, res.Foo)
 }
 
-func TestToDTOList(t *testing.T) {
-	type dto struct {
+func TestUnmarshalList(t *testing.T) {
+	type testDTO struct {
 		ID  string `json:"id"`
 		Foo string `json:"foo"`
 	}
 
-	body := io.NopCloser(bytes.NewReader([]byte(`[{
+	body := []byte(`[{
 		"id":"123",
 		"foo":"something" 
 	},
@@ -50,9 +48,9 @@ func TestToDTOList(t *testing.T) {
 		"id":"789",
 		"foo":"something entirely different" 
 	}
-	]`)))
+	]`)
 
-	var expected = []dto{
+	var expected = []testDTO{
 		{
 			ID:  "123",
 			Foo: "something",
@@ -67,7 +65,7 @@ func TestToDTOList(t *testing.T) {
 		},
 	}
 
-	res, err := toDTO[[]dto](body)
+	res, err := Unmarshal[[]testDTO](body)
 	require.NoError(t, err)
 
 	assert.Len(t, *res, len(expected))
@@ -76,13 +74,13 @@ func TestToDTOList(t *testing.T) {
 	assert.Equal(t, (*res)[2].ID, "789")
 }
 
-func TestToDTOShouldFail(t *testing.T) {
-	type dto struct {
+func TestUnmarshalShouldFail(t *testing.T) {
+	type testDTO struct {
 		ID  string `json:"id"`
 		Foo string `json:"foo"`
 	}
 
-	body := io.NopCloser(bytes.NewReader([]byte(`[{
+	body := []byte(`[{
 		"id":"123",
 		"foo":"something" 
 	},
@@ -94,16 +92,45 @@ func TestToDTOShouldFail(t *testing.T) {
 		"id":"789",
 		"foo":"something entirely different" 
 	}
-	]`)))
+	]`)
 
-	_, err := toDTO[dto](body) // <-- Parametrized as single object but it contains a list
+	_, err := Unmarshal[testDTO](body) // <-- Parametrized as single object but it contains a list
 	assert.Error(t, err)
 
-	body = io.NopCloser(bytes.NewReader([]byte(`{
+	body = []byte(`{
 		"id":"123",
 		"foo":"something" 
-	}`)))
+	}`)
 
-	_, err = toDTO[[]dto](body) // <-- Parametrized as list but it contains a single object
+	_, err = Unmarshal[[]testDTO](body) // <-- Parametrized as list but it contains a single object
 	assert.Error(t, err)
+}
+
+func TestAttemptUnmarshal(t *testing.T) {
+	type testDTO struct {
+		ID  string `json:"id"`
+		Foo string `json:"foo"`
+	}
+
+	bodyMultiple := []byte(`[{
+		"id":"123",
+		"foo":"something"
+	},
+	{
+		"id":"456",
+		"foo":"something else"
+	},
+	{
+		"id":"789",
+		"foo":"something entirely different"
+	}
+	]`)
+
+	singular, dto, dtos, err := AttemptUnmarshal[testDTO](bodyMultiple)
+
+	require.NoError(t, err)
+
+	assert.False(t, singular)
+	assert.Nil(t, dto)
+	assert.Len(t, dtos, 3)
 }

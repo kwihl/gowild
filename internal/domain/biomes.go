@@ -1,4 +1,4 @@
-package biomes
+package domain
 
 type Biome string
 

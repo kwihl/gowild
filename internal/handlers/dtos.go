@@ -1,56 +1,68 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 
 	"github.com/google/uuid"
-	fauna "gowild.com/pkg/animals"
-	flora "gowild.com/pkg/plants"
+	"gowild.com/internal/domain"
 )
-
-func toDTO[T any](body io.ReadCloser) (*T, error) {
-	decoder := json.NewDecoder(body)
-	var dto T
-	if err := decoder.Decode(&dto); err != nil {
-		return nil, err
-	}
-
-	fmt.Println(dto)
-	return &dto, nil
-}
 
 type animalDTO struct {
 	ID    uuid.UUID `json:"id"`
-	Name  string    `json:"name"`
-	Noise string    `json:"noise"`
+	Name  string    `json:"name,omitempty"`
+	Noise string    `json:"noise,omitempty"`
+}
+
+func (a animalDTO) toDomain() domain.Animal {
+	return domain.Animal{
+		ID:    a.ID,
+		Name:  a.Name,
+		Noise: a.Noise,
+	}
+}
+
+func animalsFromDomain(animals []domain.Animal) []animalDTO {
+	dtos := make([]animalDTO, len(animals))
+	for i, animal := range animals {
+		dtos[i] = animalDTO{
+			ID:    animal.ID,
+			Name:  animal.Name,
+			Noise: animal.Noise,
+		}
+	}
+
+	return dtos
 }
 
 type plantDTO struct {
 	ID   uuid.UUID `json:"id"`
-	Name string    `json:"name"`
-	Size string    `json:"plantSize"`
+	Name string    `json:"name,omitempty"`
+	Size string    `json:"plantSize,omitempty"`
 }
 
-func (a *plantDTO) toDomain() (flora.Plant, error) {
+func (p plantDTO) toDomain() (domain.Plant, error) {
 
-	plantSize, ok := flora.ToPlantSize(a.Size)
+	plantSize, ok := domain.ToPlantSize(p.Size)
 	if !ok {
-		return flora.Plant{}, fmt.Errorf("invalid plant size")
+		return domain.Plant{}, fmt.Errorf("invalid plant size")
 	}
 
-	return flora.Plant{
-		ID:   a.ID,
-		Name: a.Name,
+	return domain.Plant{
+		ID:   p.ID,
+		Name: p.Name,
 		Size: plantSize,
 	}, nil
 }
 
-func (a *animalDTO) toDomain() (fauna.Animal, error) {
-	return fauna.Animal{
-		ID:    a.ID,
-		Name:  a.Name,
-		Noise: a.Noise,
-	}, nil
+func plantsFromDomain(plants []domain.Plant) []plantDTO {
+	dtos := make([]plantDTO, len(plants))
+	for i, plant := range plants {
+		dtos[i] = plantDTO{
+			ID:   plant.ID,
+			Name: plant.Name,
+			Size: string(plant.Size),
+		}
+	}
+
+	return dtos
 }

@@ -20,11 +20,11 @@ type appHandlers struct {
 	mountainHandler internal.MountainHandler
 }
 
-func attachHandlers(forestHandler internal.ForestHandler, mountainHandler internal.MountainHandler, mux *http.ServeMux) {
+func attachHandlers(forestHandler internal.ForestHandler, _ internal.MountainHandler, mux *http.ServeMux) {
 
-	mux.HandleFunc("v1/forest/animals", forestHandler.Animals)
-	//mux.HandleFunc("v1/mountain/animals", nil)
-	//mux.HandleFunc("v1/mountain/plants", nil)
+	mux.HandleFunc("/v1/forest/animals", forestHandler.Animals)
+	//mux.HandleFunc("/v1/mountain/animals", nil)
+	//mux.HandleFunc("/v1/mountain/plants", nil)
 }
 
 // This is our "factory" - this is where we set the stage. All repository share the same db pool.
