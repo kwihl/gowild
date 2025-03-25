@@ -23,7 +23,7 @@ var _ internal.ForestHandler = (*ForestHandler)(nil)
 
 func (h *ForestHandler) Animals(w http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
-	slog.InfoContext(ctx, "/v1/animals received request")
+	slog.InfoContext(ctx, "/v1/forest/animals received request")
 
 	defer recoveryFunc(ctx, w)
 
