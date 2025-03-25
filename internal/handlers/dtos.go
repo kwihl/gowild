@@ -13,12 +13,12 @@ type animalDTO struct {
 	Noise string    `json:"noise,omitempty"`
 }
 
-func (a animalDTO) toDomain() (domain.Animal, error) {
+func (a animalDTO) toDomain() domain.Animal {
 	return domain.Animal{
 		ID:    a.ID,
 		Name:  a.Name,
 		Noise: a.Noise,
-	}, nil
+	}
 }
 
 func animalsFromDomain(animals []domain.Animal) []animalDTO {
@@ -34,13 +34,13 @@ func animalsFromDomain(animals []domain.Animal) []animalDTO {
 	return dtos
 }
 
-type PlantDTO struct {
+type plantDTO struct {
 	ID   uuid.UUID `json:"id"`
 	Name string    `json:"name,omitempty"`
 	Size string    `json:"plantSize,omitempty"`
 }
 
-func (p PlantDTO) toDomain() (domain.Plant, error) {
+func (p plantDTO) toDomain() (domain.Plant, error) {
 
 	plantSize, ok := domain.ToPlantSize(p.Size)
 	if !ok {
@@ -54,10 +54,10 @@ func (p PlantDTO) toDomain() (domain.Plant, error) {
 	}, nil
 }
 
-func plantsFromDomain(plants []domain.Plant) []PlantDTO {
-	dtos := make([]PlantDTO, len(plants))
+func plantsFromDomain(plants []domain.Plant) []plantDTO {
+	dtos := make([]plantDTO, len(plants))
 	for i, plant := range plants {
-		dtos[i] = PlantDTO{
+		dtos[i] = plantDTO{
 			ID:   plant.ID,
 			Name: plant.Name,
 			Size: string(plant.Size),
